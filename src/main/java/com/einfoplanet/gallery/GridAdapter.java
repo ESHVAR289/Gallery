@@ -21,14 +21,14 @@ import java.util.ArrayList;
 public class GridAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<String> imageUrls;
+    private ArrayList<ImgDetailDO> imageDetailData;
     private SparseBooleanArray mSparseBooleanArray;//Variable to store selected Images
     private DisplayImageOptions options;
     private boolean isCustomGalleryActivity;//Variable to check if gridview is to setup for Custom Gallery or not
 
-    public GridAdapter(Context context, ArrayList<String> imageUrls, boolean isCustomGalleryActivity) {
+    public GridAdapter(Context context, ArrayList<ImgDetailDO> imgDetailData, boolean isCustomGalleryActivity) {
         this.context = context;
-        this.imageUrls = imageUrls;
+        this.imageDetailData = imgDetailData;
         this.isCustomGalleryActivity = isCustomGalleryActivity;
         mSparseBooleanArray = new SparseBooleanArray();
 
@@ -40,26 +40,27 @@ public class GridAdapter extends BaseAdapter {
     }
 
     //Method to return selected Images
-    public ArrayList<String> getCheckedItems() {
-        ArrayList<String> mTempArry = new ArrayList<String>();
+    public ArrayList<ImgDetailDO> getCheckedItems() {
+        ArrayList<ImgDetailDO> mTempArry = new ArrayList<ImgDetailDO>();
 
-        for (int i = 0; i < imageUrls.size(); i++) {
+        for (int i = 0; i < imageDetailData.size(); i++) {
             if (mSparseBooleanArray.get(i)) {
-                mTempArry.add(imageUrls.get(i));
+                ImgDetailDO imgDetailDO = imageDetailData.get(i);
+                imgDetailDO.tickStatus = true;
+                mTempArry.add(imgDetailDO);
             }
         }
-
         return mTempArry;
     }
 
     @Override
     public int getCount() {
-        return imageUrls.size();
+        return imageDetailData.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return imageUrls.get(i);
+        return imageDetailData.get(i).imgURI;
     }
 
     @Override
@@ -69,6 +70,7 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
+        ImgDetailDO imgDetailDO = imageDetailData.get(position);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (view == null)
             view = inflater.inflate(R.layout.custom_grid_view_single_item, viewGroup, false);//Inflate layout
@@ -82,9 +84,15 @@ public class GridAdapter extends BaseAdapter {
         if (!isCustomGalleryActivity)
             mCheckBox.setVisibility(View.GONE);
 
-        ImageLoader.getInstance().displayImage("file://" + imageUrls.get(position), imageView, options);//Load Images over ImageView
+
+
+        ImageLoader.getInstance().displayImage("file://" + imgDetailDO.imgURI, imageView, options);//Load Images over ImageView
 
         if (isCustomGalleryActivity) {
+            if (imgDetailDO.tickStatus) {
+                mCheckBox.performClick();
+            }
+
             rlContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -101,21 +109,11 @@ public class GridAdapter extends BaseAdapter {
                 ((GalleryActivity) context).showSelectButton();//call custom gallery activity method
                 if (isChecked) {
                     llImgSelectContainer.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     llImgSelectContainer.setVisibility(View.GONE);
                 }
             }
         });
-//        mCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
         return view;
     }
-
-    CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);//Insert selected checkbox value inside boolean array
-            ((GalleryActivity) context).showSelectButton();//call custom gallery activity method
-        }
-    };
 }

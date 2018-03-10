@@ -11,17 +11,25 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
-public class GalleryActivity extends AppCompatActivity implements View.OnClickListener{
+import static com.einfoplanet.gallery.LauncherActivity.CustomGalleryIntentKey;
+import static com.einfoplanet.gallery.LauncherActivity.KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN;
+
+public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static Button selectImages;
     private static GridView galleryImagesGridView;
-    private static ArrayList<String> galleryImageUrls;
+    private static ArrayList<ImgDetailDO> galleryImageUrls;
     private static GridAdapter imagesAdapter;
+    private ArrayList<ImgDetailDO> launcherScreenImageData;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+//        String imagesArray = getIntent().getSerializableExtra(KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN);//get Intent data
+//        List<String> launcherScreenImages = Arrays.asList(imagesArray.substring(1, imagesArray.length() - 1).split(", "));
+        launcherScreenImageData = (ArrayList<ImgDetailDO>) getIntent().getSerializableExtra(KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN);
         initViews();
         setListeners();
         fetchGalleryImages();
@@ -42,13 +50,21 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
                 null, orderBy + " DESC");//get all data in Cursor by sorting in DESC order
 
-        galleryImageUrls = new ArrayList<String>();//Init array
+        galleryImageUrls = new ArrayList<ImgDetailDO>();//Init array
 
         //Loop to cursor count
         for (int i = 0; i < imagecursor.getCount(); i++) {
+            ImgDetailDO imgDetailDO = new ImgDetailDO();
             imagecursor.moveToPosition(i);
             int dataColumnIndex = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
-            galleryImageUrls.add(imagecursor.getString(dataColumnIndex));//get Image from column index
+            String imgUri = imagecursor.getString(dataColumnIndex);
+            for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
+                if (imgDetailDO1.imgURI.equalsIgnoreCase(imgUri))
+                    imgDetailDO.tickStatus = true;
+            }
+
+            imgDetailDO.imgURI = imgUri;
+            galleryImageUrls.add(imgDetailDO);//get Image from column index
             System.out.println("Array path" + galleryImageUrls.get(i));
         }
     }
@@ -67,7 +83,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
     //Show hide select button if images are selected or deselected
     public void showSelectButton() {
-        ArrayList<String> selectedItems = imagesAdapter.getCheckedItems();
+        ArrayList<ImgDetailDO> selectedItems = imagesAdapter.getCheckedItems();
         if (selectedItems.size() > 0) {
             selectImages.setText(selectedItems.size() + " - Images Selected");
             selectImages.setVisibility(View.VISIBLE);
@@ -82,11 +98,12 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_return:
 
                 //When button is clicked then fill array with selected images
-                ArrayList<String> selectedItems = imagesAdapter.getCheckedItems();
+                ArrayList<ImgDetailDO> selectedItems = imagesAdapter.getCheckedItems();
 
                 //Send back result to MainActivity with selected images
                 Intent intent = new Intent();
-                intent.putExtra(LauncherActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
+                intent.putExtra(CustomGalleryIntentKey, selectedItems);
+//                intent.putExtra(LauncherActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;
