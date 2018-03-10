@@ -5,16 +5,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.einfoplanet.gallery.LauncherActivity">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/selected_img_recycler_view"
-        android:layout_width="wrap_content"
+
+    <include
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="10dp"/>
+        android:id="@+id/selectedImagesGridView"
+        layout="@layout/grid_view_layout" />
+
     <android.support.v7.widget.AppCompatButton
+        android:id="@+id/openCustomGallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/label_add_image"
-        android:onClick="openGalleryActivity"
-        android:layout_margin="5dp"/>
+        android:layout_margin="5dp" />
 </LinearLayout>

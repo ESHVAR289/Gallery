@@ -91,7 +91,7 @@ public class GridAdapter extends BaseAdapter {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);//Insert selected checkbox value inside boolean array
-//            ((GalleryActivity) context).showSelectButton();//call custom gallery activity method
+            ((GalleryActivity) context).showSelectButton();//call custom gallery activity method
         }
     };
 }
