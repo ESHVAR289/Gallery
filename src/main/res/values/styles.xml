@@ -8,4 +8,84 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Text base style Avenir Medium -->
+    <style name="AppTextThemeSolidAvenirMedium" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/avenir_medium</item>
+    </style>
+
+    <!-- Text base style Avenir Light -->
+    <style name="AppTextThemeSolidAvenirLight" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/avenir_light</item>
+    </style>
+
+    <!-- Text base style Avenir Heavy -->
+    <style name="AppTextThemeSolidAvenirHeavy" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <!-- Text base style Avenir Roman -->
+    <style name="AppTextThemeSolidAvenirRoman" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/avenir_roman</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--Button base solid blue theme. -->
+    <style name="AppButtonThemeSolidBlue" parent="Base.TextAppearance.AppCompat.Widget.Button">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:background">@drawable/rounded_corner_btn_solid_blue</item>
+    </style>
+
+    <!--Button base solid grey theme. -->
+    <style name="AppButtonThemeSolidGrey" parent="Base.TextAppearance.AppCompat.Widget.Button">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:background">@drawable/rounded_corner_btn_solid_grey</item>
+    </style>
+
+    <!--Button base hollow theme. -->
+    <style name="AppButtonThemeHollow" parent="Base.TextAppearance.AppCompat.Widget.Button">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:background">@drawable/rounded_corner_btn_hollow_blue</item>
+    </style>
+
+    <!-- Button theme style solid blue Avenir Heavy-->
+    <style name="AppThemeButtonAvenirHeavyBlue" parent="AppButtonThemeSolidBlue">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <!-- Button theme style solid grey Avenir Heavy-->
+    <style name="AppThemeButtonAvenirHeavyGrey" parent="AppButtonThemeSolidGrey">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <!-- Button theme style solid Avenir Medium-->
+    <style name="AppButtonThemeAvenirMedium" parent="AppButtonThemeSolidBlue">
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/avenir_medium</item>
+    </style>
+
+    <!-- Button theme style solid Avenir Heavy-->
+    <style name="AppThemeButtonHollowAvenirHeavy" parent="AppButtonThemeHollow">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <!-- Button theme style hollow Avenir Medium-->
+    <style name="AppButtonThemeHollowAvenirMedium" parent="AppButtonThemeHollow">
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/avenir_medium</item>
+    </style>
+
+    <!-- Button theme style hollow Avenir Book-->
+    <style name="AppButtonThemeHollowAvenirBook" parent="AppButtonThemeSolidBlue">
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/avenir_book</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
 </resources>
