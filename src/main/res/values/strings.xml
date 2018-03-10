@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Gallery</string>
+    <string name="label_add_image">Add Image</string>
 </resources>
