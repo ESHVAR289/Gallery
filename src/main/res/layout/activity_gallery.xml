@@ -18,8 +18,8 @@
     <include
         android:id="@+id/galleryImagesGridView"
         layout="@layout/grid_view_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/btn_return"
         android:layout_margin="5dp"/>
 </RelativeLayout>
