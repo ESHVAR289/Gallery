@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,8 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private static final int CustomGallerySelectId = 1;//Set Intent Id
     public static final String CustomGalleryIntentKey = "ImageArray";//Set Intent Key Value
     public static final String KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN = "launcher_screen_data";
-    ArrayList<ImgDetailDO> selectedImagesToSendOnGridActivity;
+    private ArrayList<ImgDetailDO> selectedImagesToSendOnGridActivity;
+    private TextView txtNoData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private void initViews() {
         openCustomGallery = (AppCompatButton) findViewById(R.id.openCustomGallery);
         selectedImageGridView = (GridView) findViewById(R.id.selectedImagesGridView);
+        txtNoData = findViewById(R.id.txt_no_data);
     }
 
     //set Listeners
@@ -48,7 +51,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
                 //Start Custom Gallery Activity by passing intent id
                 Intent gridActivityIntent = new Intent(LauncherActivity.this, GalleryActivity.class);
                 gridActivityIntent.putExtra(KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN, selectedImagesToSendOnGridActivity);//Convert Array into string to pass data
-                startActivityForResult(gridActivityIntent,CustomGallerySelectId);
+                startActivityForResult(gridActivityIntent, CustomGallerySelectId);
                 break;
         }
     }
@@ -64,7 +67,15 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
 //                    List<String> selectedImages = Arrays.asList(imagesArray.substring(1, imagesArray.length() - 1).split(", "));
 //                    selectedImagesToSendOnGridActivity = new ArrayList<String>(selectedImages);
                     selectedImagesToSendOnGridActivity = (ArrayList<ImgDetailDO>) imagereturnintent.getSerializableExtra(CustomGalleryIntentKey);
-                    loadGridView(selectedImagesToSendOnGridActivity);//call load gridview method by passing converted list into arrayList
+                    if (selectedImagesToSendOnGridActivity.size()>0){
+                        selectedImageGridView.setVisibility(View.VISIBLE);
+                        txtNoData.setVisibility(View.GONE);
+                        loadGridView(selectedImagesToSendOnGridActivity);//call load gridview method by passing converted list into arrayList
+                    }
+                    else{
+                        selectedImageGridView.setVisibility(View.GONE);
+                        txtNoData.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
 

@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,9 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     private static ArrayList<ImgDetailDO> galleryImageUrls;
     private static GridAdapter imagesAdapter;
     private ArrayList<ImgDetailDO> launcherScreenImageData;
+    private android.support.v7.widget.Toolbar toolbar;
+    private TextView txtCount;
+    private ImageView imgBack;
 
     @Override
 
@@ -38,6 +43,9 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
     //Init all views
     private void initViews() {
+        toolbar = findViewById(R.id.toolbar);
+        txtCount = toolbar.findViewById(R.id.txt_count);
+        imgBack = toolbar.findViewById(R.id.img_back);
         selectImages = (Button) findViewById(R.id.btn_return);
         galleryImagesGridView = (GridView) findViewById(R.id.galleryImagesGridView);
     }
@@ -78,6 +86,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     //Set Listeners method
     private void setListeners() {
         selectImages.setOnClickListener(this);
+        imgBack.setOnClickListener(this);
     }
 
 
@@ -85,10 +94,19 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     public void showSelectButton() {
         ArrayList<ImgDetailDO> selectedItems = imagesAdapter.getCheckedItems();
         if (selectedItems.size() > 0) {
-            selectImages.setText(selectedItems.size() + " - Images Selected");
+            txtCount.setText(selectedItems.size() + " Selected");
+            txtCount.setVisibility(View.VISIBLE);
+            txtCount.setTextColor(getResources().getColor(android.R.color.white));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             selectImages.setVisibility(View.VISIBLE);
-        } else
+            imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+        } else{
+            toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
+            txtCount.setTextColor(getResources().getColor(android.R.color.black));
+            txtCount.setText("All Media");
             selectImages.setVisibility(View.GONE);
+            imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp));
+        }
 
     }
 
@@ -107,8 +125,16 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;
+            case R.id.img_back:
+                onBackPressed();
+                break;
 
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
