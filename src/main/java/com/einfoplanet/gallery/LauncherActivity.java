@@ -29,7 +29,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     public static final String KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN = "launcher_screen_data";
     private ArrayList<ImgDetailDO> selectedImagesToSendOnGridActivity;
     private TextView txtNoData;
-    private static final int SEND_SMS_FROM_SELECTED_SIM_CARD = 102;
+    private static final int READ_EXTERNAL_STORAGE_PERMISSION_CONST = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
                         } else {
                             ActivityCompat.requestPermissions(
                                     LauncherActivity.this, new String[]{
-                                            Manifest.permission.READ_EXTERNAL_STORAGE}, SEND_SMS_FROM_SELECTED_SIM_CARD);
+                                            Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_CONST);
                         }
                     } else {
                         //Start Custom Gallery Activity by passing intent id
@@ -112,7 +112,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case SEND_SMS_FROM_SELECTED_SIM_CARD:
+            case READ_EXTERNAL_STORAGE_PERMISSION_CONST:
                 if (grantResults.length > 0) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                             && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -174,9 +174,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                 dialog.cancel();
-                ActivityCompat.requestPermissions(LauncherActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, SEND_SMS_FROM_SELECTED_SIM_CARD);
-//                Intent gpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                startActivityForResult(gpsIntent, 10009);
+                ActivityCompat.requestPermissions(LauncherActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION_CONST);
 
             }
         });

@@ -59,12 +59,14 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             txtCount.setTextColor(getResources().getColor(android.R.color.white));
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             selectImages.setVisibility(View.VISIBLE);
+            selectImages.setTextColor(getResources().getColor(android.R.color.white));
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_white));
         } else {
             toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             txtCount.setTextColor(getResources().getColor(android.R.color.black));
             txtCount.setText("All Media");
             selectImages.setVisibility(View.VISIBLE);
+            selectImages.setTextColor(getResources().getColor(android.R.color.black));
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black));
         }
     }
@@ -212,12 +214,14 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             txtCount.setTextColor(getResources().getColor(android.R.color.white));
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             selectImages.setVisibility(View.VISIBLE);
+            selectImages.setTextColor(getResources().getColor(android.R.color.white));
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_white));
         } else {
             toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             txtCount.setTextColor(getResources().getColor(android.R.color.black));
             txtCount.setText("All Media");
             selectImages.setVisibility(View.VISIBLE);
+            selectImages.setTextColor(getResources().getColor(android.R.color.black));
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black));
         }
 
