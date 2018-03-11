@@ -64,7 +64,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             txtCount.setTextColor(getResources().getColor(android.R.color.black));
-            txtCount.setText("All Media");
+            txtCount.setText(R.string.label_all_media);
             selectImages.setVisibility(View.VISIBLE);
             selectImages.setTextColor(getResources().getColor(android.R.color.black));
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black));
