@@ -3,4 +3,5 @@
     <string name="label_add_image">Add</string>
     <string name="label_done">DONE</string>
     <string name="label_no_data">NO DATA !!</string>
+    <string name="label_all_media">All Media</string>
 </resources>

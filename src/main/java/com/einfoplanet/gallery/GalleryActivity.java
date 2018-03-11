@@ -71,7 +71,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    //fetch all images from gallery
+    //fetch all video and image from gallery
     private ArrayList<DataDetailDO> fetchGalleryData() {
         Cursor imageCursor = null;
         Cursor videoCursor = null;
@@ -93,6 +93,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
                     null, videoOrderBy + " DESC");//get all data in Cursor by sorting in DESC order
             int count = 0;
 
+            //check if there is image data is more or video data
             if (imageCursor.getCount() > videoCursor.getCount()) {
                 count = imageCursor.getCount();
                 getDataIfImageCountIsGreater(count, imageCursor, videoCursor);
@@ -219,7 +220,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             txtCount.setTextColor(getResources().getColor(android.R.color.black));
-            txtCount.setText("All Media");
+            txtCount.setText(R.string.label_all_media);
             selectImages.setVisibility(View.VISIBLE);
             selectImages.setTextColor(getResources().getColor(android.R.color.black));
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black));
@@ -231,17 +232,16 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_return:
-
                 //When button is clicked then fill array with selected images
                 ArrayList<DataDetailDO> selectedItems = imagesAdapter.getCheckedItems();
 
                 //Send back result to MainActivity with selected images
                 Intent intent = new Intent();
                 intent.putExtra(CustomGalleryIntentKey, selectedItems);
-//                intent.putExtra(LauncherActivity.CustomGalleryIntentKey, selectedItems.toString());//Convert Array into string to pass data
                 setResult(RESULT_OK, intent);//Set result OK
                 finish();//finish activity
                 break;
+
             case R.id.img_back:
                 onBackPressed();
                 break;
