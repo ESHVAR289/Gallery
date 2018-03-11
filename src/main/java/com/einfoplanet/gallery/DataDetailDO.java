@@ -1,6 +1,6 @@
 package com.einfoplanet.gallery;
 
-public class ImgDetailDO extends BaseDO {
+public class DataDetailDO extends BaseDO {
     public String imgURI;
     public boolean tickStatus;
     public int countNoInArrayList;

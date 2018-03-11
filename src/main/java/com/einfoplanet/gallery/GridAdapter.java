@@ -21,12 +21,12 @@ import java.util.ArrayList;
 public class GridAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<ImgDetailDO> imageDetailData;
+    private ArrayList<DataDetailDO> imageDetailData;
     private SparseBooleanArray mSparseBooleanArray;//Variable to store selected Images
     private DisplayImageOptions options;
     private boolean isCustomGalleryActivity;//Variable to check if gridview is to setup for Custom Gallery or not
 
-    public GridAdapter(Context context, ArrayList<ImgDetailDO> imgDetailData, boolean isCustomGalleryActivity,SparseBooleanArray sparseBooleanArray) {
+    public GridAdapter(Context context, ArrayList<DataDetailDO> imgDetailData, boolean isCustomGalleryActivity, SparseBooleanArray sparseBooleanArray) {
         this.context = context;
         this.imageDetailData = imgDetailData;
         this.isCustomGalleryActivity = isCustomGalleryActivity;
@@ -40,14 +40,14 @@ public class GridAdapter extends BaseAdapter {
     }
 
     //Method to return selected Images
-    public ArrayList<ImgDetailDO> getCheckedItems() {
-        ArrayList<ImgDetailDO> mTempArry = new ArrayList<ImgDetailDO>();
+    public ArrayList<DataDetailDO> getCheckedItems() {
+        ArrayList<DataDetailDO> mTempArry = new ArrayList<DataDetailDO>();
 
         for (int i = 0; i < imageDetailData.size(); i++) {
             if (mSparseBooleanArray.get(i)) {
-                ImgDetailDO imgDetailDO = imageDetailData.get(i);
-                imgDetailDO.tickStatus = true;
-                mTempArry.add(imgDetailDO);
+                DataDetailDO dataDetailDO = imageDetailData.get(i);
+                dataDetailDO.tickStatus = true;
+                mTempArry.add(dataDetailDO);
             }
         }
         return mTempArry;
@@ -70,7 +70,7 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
-        ImgDetailDO imgDetailDO = imageDetailData.get(position);
+        DataDetailDO dataDetailDO = imageDetailData.get(position);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (view == null)
             view = inflater.inflate(R.layout.custom_grid_view_single_item, viewGroup, false);//Inflate layout
@@ -81,7 +81,7 @@ public class GridAdapter extends BaseAdapter {
         final ImageView imageView = (ImageView) view.findViewById(R.id.galleryImageView);
 
         final LinearLayout llVideoIconContainer = view.findViewById(R.id.ll_video_icon_container);
-        if (imgDetailDO.videoIconVisibilityFlag)
+        if (dataDetailDO.videoIconVisibilityFlag)
             llVideoIconContainer.setVisibility(View.VISIBLE);
         else
             llVideoIconContainer.setVisibility(View.GONE);
@@ -90,7 +90,7 @@ public class GridAdapter extends BaseAdapter {
         if (!isCustomGalleryActivity)
             mCheckBox.setVisibility(View.INVISIBLE);
 
-        ImageLoader.getInstance().displayImage("file://" + imgDetailDO.imgURI, imageView, options);//Load Images over ImageView
+        ImageLoader.getInstance().displayImage("file://" + dataDetailDO.imgURI, imageView, options);//Load Images over ImageView
 
         mCheckBox.setTag(position);//Set Tag for CheckBox
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -27,7 +27,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     private static final int CustomGallerySelectId = 1;//Set Intent Id
     public static final String CustomGalleryIntentKey = "ImageArray";//Set Intent Key Value
     public static final String KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN = "launcher_screen_data";
-    private ArrayList<ImgDetailDO> selectedImagesToSendOnGridActivity;
+    private ArrayList<DataDetailDO> selectedImagesToSendOnGridActivity;
     private TextView txtNoData;
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CONST = 102;
 
@@ -94,7 +94,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
             case CustomGallerySelectId:
                 if (resultcode == RESULT_OK) {
 
-                    selectedImagesToSendOnGridActivity = (ArrayList<ImgDetailDO>) imagereturnintent.getSerializableExtra(CustomGalleryIntentKey);
+                    selectedImagesToSendOnGridActivity = (ArrayList<DataDetailDO>) imagereturnintent.getSerializableExtra(CustomGalleryIntentKey);
                     if (selectedImagesToSendOnGridActivity.size() > 0) {
                         selectedImageGridView.setVisibility(View.VISIBLE);
                         txtNoData.setVisibility(View.GONE);
@@ -162,7 +162,7 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
     }
 
     //Load GridView
-    private void loadGridView(ArrayList<ImgDetailDO> imageDetailData) {
+    private void loadGridView(ArrayList<DataDetailDO> imageDetailData) {
         GridAdapter adapter = new GridAdapter(LauncherActivity.this, imageDetailData, false, new SparseBooleanArray());
         selectedImageGridView.setAdapter(adapter);
     }

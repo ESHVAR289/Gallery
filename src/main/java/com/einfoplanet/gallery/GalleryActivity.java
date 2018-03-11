@@ -21,9 +21,9 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
     private static Button selectImages;
     private static GridView galleryImagesGridView;
-    private static ArrayList<ImgDetailDO> galleryDataURI;
+    private static ArrayList<DataDetailDO> galleryDataURI;
     private static GridAdapter imagesAdapter;
-    private ArrayList<ImgDetailDO> launcherScreenImageData;
+    private ArrayList<DataDetailDO> launcherScreenImageData;
     private android.support.v7.widget.Toolbar toolbar;
     private TextView txtCount;
     private ImageView imgBack;
@@ -36,11 +36,11 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        launcherScreenImageData = (ArrayList<ImgDetailDO>) getIntent().getSerializableExtra(KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN);
+        launcherScreenImageData = (ArrayList<DataDetailDO>) getIntent().getSerializableExtra(KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN);
         mSparseBooleanArray = new SparseBooleanArray();
         initViews();
         setListeners();
-        galleryDataURI = new ArrayList<ImgDetailDO>();//Init array
+        galleryDataURI = new ArrayList<DataDetailDO>();//Init array
         fetchGalleryData();
         setUpGridView();
     }
@@ -72,10 +72,10 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //fetch all images from gallery
-    private ArrayList<ImgDetailDO> fetchGalleryData() {
+    private ArrayList<DataDetailDO> fetchGalleryData() {
         Cursor imageCursor = null;
         Cursor videoCursor = null;
-        ArrayList<ImgDetailDO> imgDetailData = new ArrayList<>();
+        ArrayList<DataDetailDO> imgDetailData = new ArrayList<>();
         try {
             final String[] imagesColumns = {
                     MediaStore.Images.Media.DATA,
@@ -117,7 +117,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     private void getDataIfVideoCountIsGreater(int count, Cursor imageCursor, Cursor videoCursor) {
         //Loop to cursor count
         for (int i = 0; i < count; i++) {
-            ImgDetailDO videoDetailDO = new ImgDetailDO();
+            DataDetailDO videoDetailDO = new DataDetailDO();
             videoCursor.moveToPosition(i);
             int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);//get column index
             String videoUri = videoCursor.getString(videoDataColumnIndex);
@@ -125,30 +125,30 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             videoDetailDO.imgURI = videoUri;
             videoDetailDO.videoIconVisibilityFlag = true;
             videoDetailDO.countNoInArrayList = i;
-            for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
-                if (imgDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
+            for (DataDetailDO dataDetailDO1 : launcherScreenImageData) {
+                if (dataDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
                     videoDetailDO.tickStatus = true;
-                    mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                    mSparseBooleanArray.put(dataDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
                 }
             }
             galleryDataURI.add(videoDetailDO);//get Image from column index
 
             if (j < imageCursor.getCount()) {
-                ImgDetailDO imgDetailDO = new ImgDetailDO();
+                DataDetailDO dataDetailDO = new DataDetailDO();
                 imageCursor.moveToPosition(j);
                 int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
                 String imgUri = imageCursor.getString(dataColumnIndex);
                 j++;
                 i++;
-                imgDetailDO.imgURI = imgUri;
-                imgDetailDO.countNoInArrayList = i;
-                for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
-                    if (imgDetailDO1.imgURI.equalsIgnoreCase(imgUri)) {
-                        imgDetailDO.tickStatus = true;
-                        mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                dataDetailDO.imgURI = imgUri;
+                dataDetailDO.countNoInArrayList = i;
+                for (DataDetailDO dataDetailDO1 : launcherScreenImageData) {
+                    if (dataDetailDO1.imgURI.equalsIgnoreCase(imgUri)) {
+                        dataDetailDO.tickStatus = true;
+                        mSparseBooleanArray.put(dataDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
                     }
                 }
-                galleryDataURI.add(imgDetailDO);//get Image from column index
+                galleryDataURI.add(dataDetailDO);//get Image from column index
             }
         }
     }
@@ -156,22 +156,22 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     private void getDataIfImageCountIsGreater(int count, Cursor imageCursor, Cursor videoCursor) {
         //Loop to cursor count
         for (int i = 0; i < count; i++) {
-            ImgDetailDO imgDetailDO = new ImgDetailDO();
+            DataDetailDO dataDetailDO = new DataDetailDO();
             imageCursor.moveToPosition(i);
             int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
             String imgUri = imageCursor.getString(dataColumnIndex);
 
-            imgDetailDO.imgURI = imgUri;
-            imgDetailDO.countNoInArrayList = i;
-            for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
-                if (imgDetailDO1.imgURI.equalsIgnoreCase(imgUri)) {
-                    imgDetailDO.tickStatus = true;
-                    mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+            dataDetailDO.imgURI = imgUri;
+            dataDetailDO.countNoInArrayList = i;
+            for (DataDetailDO dataDetailDO1 : launcherScreenImageData) {
+                if (dataDetailDO1.imgURI.equalsIgnoreCase(imgUri)) {
+                    dataDetailDO.tickStatus = true;
+                    mSparseBooleanArray.put(dataDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
                 }
             }
-            galleryDataURI.add(imgDetailDO);//get Image from column index
+            galleryDataURI.add(dataDetailDO);//get Image from column index
             if (j < videoCursor.getCount()) {
-                ImgDetailDO videoDetailDO = new ImgDetailDO();
+                DataDetailDO videoDetailDO = new DataDetailDO();
                 videoCursor.moveToPosition(j);
                 int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);//get column index
                 String videoUri = videoCursor.getString(videoDataColumnIndex);
@@ -181,10 +181,10 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
                 i++;
                 videoDetailDO.countNoInArrayList = i;
                 videoDetailDO.videoIconVisibilityFlag = true;
-                for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
-                    if (imgDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
+                for (DataDetailDO dataDetailDO1 : launcherScreenImageData) {
+                    if (dataDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
                         videoDetailDO.tickStatus = true;
-                        mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                        mSparseBooleanArray.put(dataDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
                     }
                 }
                 galleryDataURI.add(videoDetailDO);//get Image from column index
@@ -207,7 +207,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
     //Show hide select button if images are selected or deselected
     public void showSelectButton() {
-        ArrayList<ImgDetailDO> selectedItems = imagesAdapter.getCheckedItems();
+        ArrayList<DataDetailDO> selectedItems = imagesAdapter.getCheckedItems();
         if (selectedItems.size() > 0) {
             txtCount.setText((selectedItems.size()) + " Selected");
             txtCount.setVisibility(View.VISIBLE);
@@ -233,7 +233,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_return:
 
                 //When button is clicked then fill array with selected images
-                ArrayList<ImgDetailDO> selectedItems = imagesAdapter.getCheckedItems();
+                ArrayList<DataDetailDO> selectedItems = imagesAdapter.getCheckedItems();
 
                 //Send back result to MainActivity with selected images
                 Intent intent = new Intent();
