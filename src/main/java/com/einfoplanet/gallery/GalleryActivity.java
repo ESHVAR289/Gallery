@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
@@ -22,13 +21,14 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
     private static Button selectImages;
     private static GridView galleryImagesGridView;
-    private static ArrayList<ImgDetailDO> galleryImageUrls;
+    private static ArrayList<ImgDetailDO> galleryDataURI;
     private static GridAdapter imagesAdapter;
     private ArrayList<ImgDetailDO> launcherScreenImageData;
     private android.support.v7.widget.Toolbar toolbar;
     private TextView txtCount;
     private ImageView imgBack;
     private SparseBooleanArray mSparseBooleanArray;//Variable to store selected Images
+    private int j = 0;
 
     @Override
 
@@ -40,7 +40,8 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         mSparseBooleanArray = new SparseBooleanArray();
         initViews();
         setListeners();
-        fetchGalleryImages();
+        galleryDataURI = new ArrayList<ImgDetailDO>();//Init array
+        fetchGalleryData();
         setUpGridView();
     }
 
@@ -52,46 +53,144 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         selectImages = (Button) findViewById(R.id.btn_return);
         galleryImagesGridView = (GridView) findViewById(R.id.galleryImagesGridView);
 
-        toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
-        txtCount.setTextColor(getResources().getColor(android.R.color.black));
-        txtCount.setText("All Media");
-        selectImages.setVisibility(View.VISIBLE);
-        imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black));
+        if (launcherScreenImageData.size() > 0) {
+            txtCount.setText((launcherScreenImageData.size()) + " Selected");
+            txtCount.setVisibility(View.VISIBLE);
+            txtCount.setTextColor(getResources().getColor(android.R.color.white));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            selectImages.setVisibility(View.VISIBLE);
+            imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_white));
+        } else {
+            toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
+            txtCount.setTextColor(getResources().getColor(android.R.color.black));
+            txtCount.setText("All Media");
+            selectImages.setVisibility(View.VISIBLE);
+            imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_black));
+        }
     }
 
     //fetch all images from gallery
-    private void fetchGalleryImages() {
-        final String[] columns = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};//get all columns of type images
-        final String orderBy = MediaStore.Images.Media.DATE_TAKEN;//order data by date
-        Cursor imagecursor = managedQuery(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
-                null, orderBy + " DESC");//get all data in Cursor by sorting in DESC order
+    private ArrayList<ImgDetailDO> fetchGalleryData() {
+        Cursor imageCursor = null;
+        Cursor videoCursor = null;
+        ArrayList<ImgDetailDO> imgDetailData = new ArrayList<>();
+        try {
+            final String[] imagesColumns = {
+                    MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DATE_TAKEN};//get all columns of type images
+            final String imagesOrderBy = MediaStore.Images.Media.DATE_TAKEN;//order data by date
+            imageCursor = this.getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imagesColumns, null,
+                    null, imagesOrderBy + " DESC");//get all data in Cursor by sorting in DESC order
 
-        galleryImageUrls = new ArrayList<ImgDetailDO>();//Init array
+            final String[] videoColumns = {MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID};//get all columns of type videos
+            final String videoOrderBy = MediaStore.Video.Media.DATE_TAKEN;//order data by date
+            videoCursor = this.getContentResolver().query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, null,
+                    null, videoOrderBy + " DESC");//get all data in Cursor by sorting in DESC order
+            int count = 0;
 
-        //Loop to cursor count
-        for (int i = 0; i < imagecursor.getCount(); i++) {
-            ImgDetailDO imgDetailDO = new ImgDetailDO();
-            imagecursor.moveToPosition(i);
-            int dataColumnIndex = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
-            String imgUri = imagecursor.getString(dataColumnIndex);
-            for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
-                if (imgDetailDO1.imgURI.equalsIgnoreCase(imgUri)){
-                    Log.e("GALLERY ACTIVITY", "uri => " + imgUri);
-                    imgDetailDO.tickStatus = true;
-                    mSparseBooleanArray.put(i, true);//Insert selected checkbox value inside boolean array
-                }
+            if (imageCursor.getCount() > videoCursor.getCount()) {
+                count = imageCursor.getCount();
+                getDataIfImageCountIsGreater(count, imageCursor, videoCursor);
+            } else {
+                count = videoCursor.getCount();
+                getDataIfVideoCountIsGreater(count, imageCursor, videoCursor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (imageCursor != null) {
+                imageCursor.close();
             }
 
-            imgDetailDO.imgURI = imgUri;
-            galleryImageUrls.add(imgDetailDO);//get Image from column index
+            if (videoCursor != null) {
+                videoCursor.close();
+            }
+        }
+        return imgDetailData;
+    }
 
+    private void getDataIfVideoCountIsGreater(int count, Cursor imageCursor, Cursor videoCursor) {
+        //Loop to cursor count
+        for (int i = 0; i < count; i++) {
+            ImgDetailDO videoDetailDO = new ImgDetailDO();
+            videoCursor.moveToPosition(i);
+            int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);//get column index
+            String videoUri = videoCursor.getString(videoDataColumnIndex);
+
+            videoDetailDO.imgURI = videoUri;
+            videoDetailDO.countNoInArrayList = i;
+            for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
+                if (imgDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
+                    videoDetailDO.tickStatus = true;
+                    mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                }
+            }
+            galleryDataURI.add(videoDetailDO);//get Image from column index
+
+            if (j < imageCursor.getCount()) {
+                ImgDetailDO imgDetailDO = new ImgDetailDO();
+                imageCursor.moveToPosition(j);
+                int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
+                String imgUri = imageCursor.getString(dataColumnIndex);
+                j++;
+                i++;
+                imgDetailDO.imgURI = imgUri;
+                imgDetailDO.countNoInArrayList = i;
+                for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
+                    if (imgDetailDO1.imgURI.equalsIgnoreCase(imgUri)) {
+                        imgDetailDO.tickStatus = true;
+                        mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                    }
+                }
+                galleryDataURI.add(imgDetailDO);//get Image from column index
+            }
+        }
+    }
+
+    private void getDataIfImageCountIsGreater(int count, Cursor imageCursor, Cursor videoCursor) {
+        //Loop to cursor count
+        for (int i = 0; i < count; i++) {
+            ImgDetailDO imgDetailDO = new ImgDetailDO();
+            imageCursor.moveToPosition(i);
+            int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);//get column index
+            String imgUri = imageCursor.getString(dataColumnIndex);
+
+            imgDetailDO.imgURI = imgUri;
+            imgDetailDO.countNoInArrayList = i;
+            for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
+                if (imgDetailDO1.imgURI.equalsIgnoreCase(imgUri)) {
+                    imgDetailDO.tickStatus = true;
+                    mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                }
+            }
+            galleryDataURI.add(imgDetailDO);//get Image from column index
+            if (j < videoCursor.getCount()) {
+                ImgDetailDO videoDetailDO = new ImgDetailDO();
+                videoCursor.moveToPosition(j);
+                int videoDataColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);//get column index
+                String videoUri = videoCursor.getString(videoDataColumnIndex);
+
+                videoDetailDO.imgURI = videoUri;
+                j++;
+                i++;
+                videoDetailDO.countNoInArrayList = i;
+                for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
+                    if (imgDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
+                        videoDetailDO.tickStatus = true;
+                        mSparseBooleanArray.put(imgDetailDO1.countNoInArrayList, true);//Insert selected checkbox value inside boolean array
+                    }
+                }
+                galleryDataURI.add(videoDetailDO);//get Image from column index
+            }
         }
     }
 
     //Set Up GridView method
     private void setUpGridView() {
-        imagesAdapter = new GridAdapter(GalleryActivity.this, galleryImageUrls, true,mSparseBooleanArray);
+        imagesAdapter = new GridAdapter(GalleryActivity.this, galleryDataURI, true, mSparseBooleanArray);
         galleryImagesGridView.setAdapter(imagesAdapter);
     }
 
@@ -112,7 +211,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             selectImages.setVisibility(View.VISIBLE);
             imgBack.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_white));
-        } else{
+        } else {
             toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
             txtCount.setTextColor(getResources().getColor(android.R.color.black));
             txtCount.setText("All Media");
