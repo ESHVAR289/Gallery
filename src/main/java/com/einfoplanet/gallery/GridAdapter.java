@@ -80,6 +80,12 @@ public class GridAdapter extends BaseAdapter {
         final CheckBox mCheckBox = (CheckBox) view.findViewById(R.id.selectCheckBox);
         final ImageView imageView = (ImageView) view.findViewById(R.id.galleryImageView);
 
+        final LinearLayout llVideoIconContainer = view.findViewById(R.id.ll_video_icon_container);
+        if (imgDetailDO.videoIconVisibilityFlag)
+            llVideoIconContainer.setVisibility(View.VISIBLE);
+        else
+            llVideoIconContainer.setVisibility(View.GONE);
+
         //If Context is MainActivity then hide checkbox
         if (!isCustomGalleryActivity)
             mCheckBox.setVisibility(View.INVISIBLE);

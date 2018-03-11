@@ -121,6 +121,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
             String videoUri = videoCursor.getString(videoDataColumnIndex);
 
             videoDetailDO.imgURI = videoUri;
+            videoDetailDO.videoIconVisibilityFlag = true;
             videoDetailDO.countNoInArrayList = i;
             for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
                 if (imgDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
@@ -177,6 +178,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
                 j++;
                 i++;
                 videoDetailDO.countNoInArrayList = i;
+                videoDetailDO.videoIconVisibilityFlag = true;
                 for (ImgDetailDO imgDetailDO1 : launcherScreenImageData) {
                     if (imgDetailDO1.imgURI.equalsIgnoreCase(videoUri)) {
                         videoDetailDO.tickStatus = true;

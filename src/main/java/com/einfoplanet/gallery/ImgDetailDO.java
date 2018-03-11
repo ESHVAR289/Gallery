@@ -4,4 +4,5 @@ public class ImgDetailDO extends BaseDO {
     public String imgURI;
     public boolean tickStatus;
     public int countNoInArrayList;
+    public boolean videoIconVisibilityFlag;
 }
