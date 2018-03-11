@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/galleryImageView"
         android:layout_alignParentRight="true"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_centerVertical="true" />
 
     <LinearLayout

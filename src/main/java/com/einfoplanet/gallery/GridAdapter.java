@@ -26,11 +26,11 @@ public class GridAdapter extends BaseAdapter {
     private DisplayImageOptions options;
     private boolean isCustomGalleryActivity;//Variable to check if gridview is to setup for Custom Gallery or not
 
-    public GridAdapter(Context context, ArrayList<ImgDetailDO> imgDetailData, boolean isCustomGalleryActivity) {
+    public GridAdapter(Context context, ArrayList<ImgDetailDO> imgDetailData, boolean isCustomGalleryActivity,SparseBooleanArray sparseBooleanArray) {
         this.context = context;
         this.imageDetailData = imgDetailData;
         this.isCustomGalleryActivity = isCustomGalleryActivity;
-        mSparseBooleanArray = new SparseBooleanArray();
+        mSparseBooleanArray = sparseBooleanArray;
 
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
@@ -60,7 +60,7 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return imageDetailData.get(i).imgURI;
+        return imageDetailData.get(i);
     }
 
     @Override
@@ -82,26 +82,11 @@ public class GridAdapter extends BaseAdapter {
 
         //If Context is MainActivity then hide checkbox
         if (!isCustomGalleryActivity)
-            mCheckBox.setVisibility(View.GONE);
-
-
+            mCheckBox.setVisibility(View.INVISIBLE);
 
         ImageLoader.getInstance().displayImage("file://" + imgDetailDO.imgURI, imageView, options);//Load Images over ImageView
 
-        if (isCustomGalleryActivity) {
-            if (imgDetailDO.tickStatus) {
-                mCheckBox.performClick();
-            }
-
-            rlContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCheckBox.performClick();
-                }
-            });
-        }
         mCheckBox.setTag(position);//Set Tag for CheckBox
-        mCheckBox.setChecked(mSparseBooleanArray.get(position));
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -114,6 +99,24 @@ public class GridAdapter extends BaseAdapter {
                 }
             }
         });
+
+        if (isCustomGalleryActivity) {
+            if (mSparseBooleanArray.get((Integer) mCheckBox.getTag())){
+                llImgSelectContainer.setVisibility(View.VISIBLE);
+                mCheckBox.setChecked(true);
+            }
+            else{
+                llImgSelectContainer.setVisibility(View.GONE);
+                mCheckBox.setChecked(false);
+            }
+
+            rlContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCheckBox.performClick();
+                }
+            });
+        }
         return view;
     }
 }
