@@ -114,14 +114,12 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         switch (requestCode) {
             case READ_EXTERNAL_STORAGE_PERMISSION_CONST:
                 if (grantResults.length > 0) {
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED
-                            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         //Start Custom Gallery Activity by passing intent id
                         Intent gridActivityIntent = new Intent(LauncherActivity.this, GalleryActivity.class);
                         gridActivityIntent.putExtra(KEY_IMAGE_DATA_FROM_LAUNCHER_SCREEN, selectedImagesToSendOnGridActivity);//Convert Array into string to pass data
                         startActivityForResult(gridActivityIntent, CustomGallerySelectId);
-                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED ||
-                            grantResults[1] == PackageManager.PERMISSION_DENIED) {
+                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                         if (ActivityCompat.shouldShowRequestPermissionRationale(LauncherActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                             runOnUiThread(new Runnable() {
                                 @Override
