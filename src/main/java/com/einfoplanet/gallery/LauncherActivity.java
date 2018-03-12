@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+//master
 public class LauncherActivity extends AppCompatActivity implements View.OnClickListener {
     private AppCompatButton openCustomGallery;
     private static GridView selectedImageGridView;
